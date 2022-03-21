@@ -47,7 +47,7 @@ typedef struct error_t {
     error err;
 } error_t;
 
-/** @returns Error name*/
+/** @returns error name*/
 char* err_name(error err);
 
 /** Prints information about the error to the stdout */
@@ -59,6 +59,7 @@ void err_info(error err);
 bool err_check(error_t status);
 
 /** 
+ * * check if sum of 2 numbers will result in overflow
  * @param a first number to sum 
  * @param b second number to sum
  * @returns true if an overflow occured

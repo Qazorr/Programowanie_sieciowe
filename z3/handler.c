@@ -71,6 +71,8 @@ char** split(message_t* message, error_t* status)
     char* mess = message->info;
     uint32_t del_count = 0, mess_len = 0;
     const char delimiter = ' ';
+    
+    //? counting the lenght of the message and number of delimiters (multi-spaces count as 1)
     while(*(mess)) {
         if(!is_valid(*mess)) { 
             status->err = BAD_CHARACTER; 
@@ -85,25 +87,25 @@ char** split(message_t* message, error_t* status)
         } 
     }
 
-    mess -= (mess_len); //wracamy do poczatku wiadomosci
+    mess -= (mess_len); //comming back at the beginning of the message
 
     char** array = malloc(sizeof(*array) * (mess_len+1));
     char** beginning = array;
 
     uint32_t word_counter = 0, word_len = 0;
 
-    //slow mamy o 1 wiecej niz spacji
+    //we have one word more than the delimiter's count (Ala ma kota - 3 words, 2 delims)
     for(word_counter = 0; word_counter < del_count + 1; word_counter++) {
-        while(*(mess+word_len) != delimiter) word_len++;
-        *array = malloc(sizeof(**array) * (word_len+1)); //+1 bo trzymamy na koncu '\0'
-        memcpy(*array, mess, word_len); //kopiujemy slowo do naszej tablicy slow
-        *((*array) + word_len) = '\0'; //ustawiamy na koniec slowa w tablicy '\0'
-        mess += word_len + 1; //przesuwamy pointer tak aby wskazywal na koniec poprzedniego slowa
-        while(*mess == delimiter) mess++;
-        array++; //bierzemy kolejna, pustą tablice
-        word_len = 0; //zerujemy, bo bierzemy nowe slowo
+        while(*(mess+word_len) != delimiter) word_len++; //finding the word lenght
+        *array = malloc(sizeof(**array) * (word_len+1)); //+1 because we need the space for '\0'
+        memcpy(*array, mess, word_len); //copying the word to the allocated array
+        *((*array) + word_len) = '\0';
+        mess += word_len + 1; //moving the pointer to the next word
+        while(*mess == delimiter) mess++; //moving past unnecessary whitespaces
+        array++; //moving to the next empty slot
+        word_len = 0;
     }
-    message->no_values = word_counter;
+    message->no_values = word_counter; //keeping number of words since it'll be 
     return beginning;
 }
 uint32_t sum(char** values, uint32_t no_values, error_t* status)
@@ -120,7 +122,7 @@ uint32_t sum(char** values, uint32_t no_values, error_t* status)
             status->err = SUM_OVERFLOW;
             return total;
         } 
-        else total += val;
+        total += val;
         values++;
     }
     return total;
@@ -132,20 +134,19 @@ char* summation_protocol(uint32_t* no_message, message_t message, error_t status
 {
     char* output_message = malloc(sizeof(*output_message) * BUFFER);
     memset(output_message, 0, strlen(output_message));
-    printf("[%d] RECEIVED: %s%s%s", *no_message, GREEN, message.info, RESET);
-    char** values = split(&message, &status);
-    if(err_check(status)) 
-        sprintf(output_message, "[%d] %s%s%s\r\n", *no_message, RED, err_name(status.err), RESET);
+    printf("[%d] RECEIVED: %s%s%s", *no_message, GREEN, message.info, RESET);   //print onto the server message from the client
+    char** values = split(&message, &status);   //split the message to single numbers
+    if(err_check(status)) //check whether split() generated an error
+        sprintf(output_message, "[%d] %s%s%s\r\n", *no_message, RED, err_name(status.err), RESET); //generate error message
     else {
-        uint32_t output_sum = sum(values, message.no_values, &status);
-        if(err_check(status)) 
-            sprintf(output_message, "[%d] %s%s%s\r\n", *no_message, RED, err_name(status.err), RESET);
+        uint32_t output_sum = sum(values, message.no_values, &status); //sum the numbers
+        if(err_check(status)) //check whether sum() generated an error
+            sprintf(output_message, "[%d] %s%s%s\r\n", *no_message, RED, err_name(status.err), RESET); //generate error message
         else
-            sprintf(output_message, "[%d] SUM = %s%u%s\r\n", *no_message, GREEN, output_sum, RESET);
+            sprintf(output_message, "[%d] SUM = %s%u%s\r\n", *no_message, GREEN, output_sum, RESET); //generate message with sum
     }
     return output_message;
 }
-
 void reset(char** values, message_t message, error_t status, char* output_message)
 {
     free2d(values, message.no_values);
