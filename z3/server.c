@@ -59,7 +59,7 @@ int main(int argc, char* argv[])
         }
 
         //clear everything
-        clear(values, message, status, output_message);
+        reset(values, message, status, output_message);
         memset(&client, 0, sizeof(client));
     }
 }
