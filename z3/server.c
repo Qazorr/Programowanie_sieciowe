@@ -2,13 +2,42 @@
 
 #define PORT 2020
 
+int socket_fd;  //file descriptor for the server socket
+message_t message;  //wrapper for the message from client
+char* output_message;   //message to client
+
+// denominates what'll happen when exit() is called
+void ending_sequence(void)
+{
+    close(socket_fd);
+    msg_free(&message);
+    free(output_message);
+    printf("\nServer has been closed...");
+}
+
+// handler for the signal
+static void sig_handler(int sigNum) { exit(EXIT_SUCCESS); }
+
 int main(int argc, char* argv[])
 {
-    int socket_fd;
     struct sockaddr_in server, client;
 
     if((socket_fd = socket(AF_INET, SOCK_DGRAM, 0)) == -1) {
         perror("socket error\n");
+        exit(EXIT_FAILURE);
+    }
+
+    msg_init(&message);
+    error_t status;
+    status_init(&status);
+
+    if(atexit(ending_sequence) == -1) {
+        perror("atexit error\n");
+        _exit(EXIT_FAILURE);
+    }
+
+    if(signal(SIGINT, sig_handler) == SIG_ERR) {
+        perror("signal error\n");
         exit(EXIT_FAILURE);
     }
 
@@ -22,13 +51,9 @@ int main(int argc, char* argv[])
     }
 
     int addrlen = sizeof(socklen_t*);
-    char** values = NULL;
     uint32_t no_message = 0;
     
-    message_t message; msg_init(&message);
-    error_t status; status_init(&status);
-
-    char* output_message = malloc(sizeof(*output_message) * BUFFER);
+    output_message = malloc(sizeof(*output_message) * BUFFER);
     memset(output_message, 0, strlen(output_message));
 
     while(++no_message)
@@ -45,7 +70,7 @@ int main(int argc, char* argv[])
             exit(EXIT_FAILURE);
         }
 
-        reset(values, message, status, output_message);
+        reset(message, status, output_message);
         memset(&client, 0, sizeof(client));
     }
 }
