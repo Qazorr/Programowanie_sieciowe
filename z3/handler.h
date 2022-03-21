@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h> //memcpy
+#include <signal.h>
 #include <stdbool.h>
 #include <unistd.h>
 #include <sys/socket.h>
@@ -17,6 +18,8 @@
 
 #define BUFFER 128 //maximum size of input
 #define LIMIT "4294967295" //UINT32_MAX 
+#define LF 10
+#define CR 13
 
 /** 
  ** error states
@@ -24,12 +27,14 @@
  * @param NUMBER_OVERFLOW number exeeded the size limit
  * @param SUM_OVERFLOW adding two numbers resulted in overflow
  * @param BAD_CHARACTER message containted not supported character
+ * @param BAD_ENDING_SEQUENCE CR was not followed by LF
 */
 typedef enum error {
     NO_ERROR,
     NUMBER_OVERFLOW,
     SUM_OVERFLOW,
-    BAD_CHARACTER
+    BAD_CHARACTER,
+    BAD_ENDING_SEQUENCE
 } error;
 
 /**
@@ -65,6 +70,7 @@ bool err_check(error_t status);
  * @returns true if an overflow occured
 */
 bool will_overflow(uint32_t a, uint32_t b);
+
 /**
  * @param c character checked
  * @returns true if c is CR, LF, SPACE, '0-9'
@@ -133,18 +139,17 @@ uint32_t sum(char** values, uint32_t no_values, error_t* status);
 
 /**
  ** reset variables to initial state 
- * @param values 2d array containing numbers freed by free2d()
  * @param message wrapper for message reseted by msg_clear()
  * @param status wrapper for error reseted to NO_ERROR
  * @param output_message message served to client freed by free()
 */
-void reset(char** values, message_t message, error_t status, char* output_message);
+void reset(message_t message, error_t status, char* output_message);
 
 /**
  ** sum all numeric values in a given message if every condition is met
  * @param no_message indicator for number of the message
  * @param message message given by client
- * @param status state of the protocol - could be NO_ERROR, NUMBER_OVERFLOW, SUM_OVERFLOW, BAD_CHARACTER
+ * @param status state of the protocol - could be NO_ERROR, NUMBER_OVERFLOW, SUM_OVERFLOW, BAD_CHARACTER, BAD_ENDING_SEQUENCE
  * @returns message containing sum of the numbers if everything went alright, else an error which occured
 */ 
 char* summation_protocol(uint32_t* no_message, message_t message, error_t status);

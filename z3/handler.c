@@ -6,10 +6,11 @@ char* err_name(error err)
 {
     switch(err)
     {
-        case 0: return "NO_ERROR";
-        case 1: return "NUMBER_OVERFLOW";
-        case 2: return "SUM_OVERFLOW";
-        case 3: return "BAD_CHARACTER";
+        case NO_ERROR: return "NO_ERROR";
+        case NUMBER_OVERFLOW: return "NUMBER_OVERFLOW";
+        case SUM_OVERFLOW: return "SUM_OVERFLOW";
+        case BAD_CHARACTER: return "BAD_CHARACTER";
+        case BAD_ENDING_SEQUENCE: return "BAD_ENDING_SEQUENCE";
         default: return "BAD_ERROR_STATE"; //shouldn't ever occur
     }
 }
@@ -19,7 +20,7 @@ bool err_check(error_t status) { return status.err != NO_ERROR; }
 //! ERROR DETECTION
 
 bool will_overflow(uint32_t a, uint32_t b) { return a > UINT32_MAX - b; }
-bool is_valid(char c) { return ((c == 32) || (c == 10) || (c == 13) || (c >= 48 && c <= 57)); }
+bool is_valid(char c) { return ((c == 32) || (c == LF) || (c == CR) || (c >= 48 && c <= 57)); }
 bool overflows(char* value)
 {
     if(!strcmp(value, LIMIT)) return false;
@@ -76,6 +77,12 @@ char** split(message_t* message, error_t* status)
     while(*(mess)) {
         if(!is_valid(*mess)) { 
             status->err = BAD_CHARACTER; 
+            return NULL;
+        }
+        if(*mess == CR) {
+            if(*(mess+1) == LF) 
+                break;
+            status->err = BAD_ENDING_SEQUENCE;
             return NULL;
         }
         if(*mess == delimiter) {
@@ -145,11 +152,11 @@ char* summation_protocol(uint32_t* no_message, message_t message, error_t status
         else
             sprintf(output_message, "[%d] SUM = %s%u%s\r\n", *no_message, GREEN, output_sum, RESET); //generate message with sum
     }
+    free2d(values, message.no_values);
     return output_message;
 }
-void reset(char** values, message_t message, error_t status, char* output_message)
+void reset(message_t message, error_t status, char* output_message)
 {
-    free2d(values, message.no_values);
     status_reset(&status);
     msg_clear(&message);
     free(output_message);
