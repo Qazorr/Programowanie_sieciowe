@@ -1,4 +1,4 @@
 # Programowanie sieciowe
-[Zestaw 1](z1/)
-[Zestaw 2](z2/)
-[Zestaw 3](z3/)
+- [x] [Zestaw 1](z1/)
+- [x] [Zestaw 2](z2/)
+- [ ] [Zestaw 3](z3/)
