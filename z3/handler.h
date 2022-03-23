@@ -39,7 +39,7 @@ typedef enum error {
 
 /**
  * @param info full message 
- * @param no_values amount of words separated by ' '(32)(SPACE)
+ * @param no_values amount of words separated by ' '(32)(SPACE) | after calling split()
 */
 typedef struct message
 {

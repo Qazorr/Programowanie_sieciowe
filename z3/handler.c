@@ -23,10 +23,10 @@ bool will_overflow(uint32_t a, uint32_t b) { return a > UINT32_MAX - b; }
 bool is_valid(char c) { return ((c == 32) || (c == LF) || (c == CR) || (c >= 48 && c <= 57)); }
 bool overflows(char* value)
 {
-    if(!strcmp(value, LIMIT)) return false;
-    if(strlen(value) > strlen(LIMIT)) return true;
-    else if(strlen(value) < strlen(LIMIT)) return false;
-    else {
+    if(!strcmp(value, LIMIT)) return false; //algorithm would've returned bad value for value == LIMIT
+    if(strlen(value) > strlen(LIMIT)) return true; //longer sequence == bigger number
+    else if(strlen(value) < strlen(LIMIT)) return false; //shorter sequence == smaller number
+    else {  //we check every digit one by one and comparing it to LIMIT
         int i = 0;
         for(i = 0; i<strlen(value); i++) {
             if(value[i] < LIMIT[i]) 
@@ -79,7 +79,7 @@ char** split(message_t* message, error_t* status)
             status->err = BAD_CHARACTER; 
             return NULL;
         }
-        if(*mess == CR) {
+        if(*mess == CR) {   //if CR ('\r) occured, we check if ('\n) is next to it, if not switch error state
             if(*(mess+1) == LF) 
                 break;
             status->err = BAD_ENDING_SEQUENCE;
@@ -96,8 +96,8 @@ char** split(message_t* message, error_t* status)
 
     mess -= (mess_len); //comming back at the beginning of the message
 
-    char** array = malloc(sizeof(*array) * (mess_len+1));
-    char** beginning = array;
+    char** array = malloc(sizeof(*array) * (mess_len+1)); //2d array with splitted sequences
+    char** beginning = array; //pointer to beggining of the array
 
     uint32_t word_counter = 0, word_len = 0;
 
@@ -112,7 +112,7 @@ char** split(message_t* message, error_t* status)
         array++; //moving to the next empty slot
         word_len = 0;
     }
-    message->no_values = word_counter; //keeping number of words since it'll be 
+    message->no_values = word_counter; //keeping number of words since it'll be useful later
     return beginning;
 }
 uint32_t sum(char** values, uint32_t no_values, error_t* status)
