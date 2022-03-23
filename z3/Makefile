@@ -1,3 +1,5 @@
+.SUFFIXES: .c .h .x .o
+
 CO = gcc
 FLAGS = -std=c99 -Wall -pedantic
 TO_CLEAN = *.x
@@ -6,21 +8,22 @@ src = $(wildcard *.c)
 obj = $(src:.c=.o)
 exe = $(src:.c=.x)
 
+SERVER = server
+HANDLER = handler
+
+EXEC_SERVER = $(SERVER).x
+
 .PHONY: all clean
 
 all: $(exe)
 	@echo Files: {$(exe)} created. 
 
-test: 
-	@gcc $(FLAGS) tester.c handler.c
-	@./a.out
+server: 
+	@gcc $(FLAGS) $(SERVER).c $(HANDLER).c -o $(EXEC_SERVER) 
+	@./$(EXEC_SERVER)
 
-server:
-	@gcc $(FLAGS) server.c handler.c -o server.x
-	@./server.x
-
-#%.o: %.c
-#	@$(CO) $^ $(FLAGS) -c
+%.o: %.c
+	@$(CO) $^ $(FLAGS) -c
 
 %.x: %.c
 	@$(CO) $< $(FLAGS) -o $@
