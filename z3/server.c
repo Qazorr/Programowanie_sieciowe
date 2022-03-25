@@ -11,8 +11,8 @@ void ending_sequence(void)
 {
     close(socket_fd);
     msg_free(&message);
-    free(output_message);
-    printf("\nServer has been closed...");
+    if(output_message == NULL) free(output_message);
+    printf("\033[0m\nServer has been closed...\n");
 }
 
 // handler for the signal
@@ -51,11 +51,8 @@ int main(int argc, char* argv[])
     }
 
     int addrlen = sizeof(socklen_t*);
-    uint32_t no_message = 0;
+    int no_message = 0;
     
-    output_message = malloc(sizeof(*output_message) * BUFFER);
-    memset(output_message, 0, strlen(output_message));
-
     while(++no_message)
     {
         if(recvfrom(socket_fd, message.info, BUFFER, 0, (struct sockaddr *) &client, (socklen_t *) &addrlen) == -1) {
@@ -70,7 +67,7 @@ int main(int argc, char* argv[])
             exit(EXIT_FAILURE);
         }
 
-        reset(message, status, output_message);
+        reset(&message, &status, output_message);
         memset(&client, 0, sizeof(client));
     }
 }
