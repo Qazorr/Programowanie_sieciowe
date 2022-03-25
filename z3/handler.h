@@ -10,14 +10,22 @@
 #include <unistd.h>
 #include <sys/socket.h>
 #include <arpa/inet.h> //sockaddr_in
+#include <errno.h>
+#include <limits.h>
 
 //ANSI COLORS
 #define RED "\033[31m"
 #define GREEN "\033[32m"
 #define RESET "\033[0m"
 
-#define BUFFER 128 //maximum size of input
-#define LIMIT "4294967295" //UINT32_MAX 
+/**
+*? The field size sets a theoretical limit of 65,535 bytes (8-byte header + 65,527 bytes of data) for a UDP datagram. 
+*? However the actual limit for the data length, which is imposed by the underlying IPv4 protocol, is 65,507 bytes 
+*? (65,535 bytes − 8-byte UDP header − 20-byte IP header).
+*/
+
+#define BUFFER 65507 //maximum size of input
+#define ul unsigned long
 #define LF 10
 #define CR 13
 
@@ -44,7 +52,7 @@ typedef enum error {
 typedef struct message
 {
     char *info;
-    uint32_t no_values;
+    ul no_values;
 } message_t;
 
 /* struct wrapping error state */
@@ -69,7 +77,7 @@ bool err_check(error_t status);
  * @param b second number to sum
  * @returns true if an overflow occured
 */
-bool will_overflow(uint32_t a, uint32_t b);
+bool will_overflow(ul a, ul b);
 
 /**
  * @param c character checked
@@ -78,10 +86,15 @@ bool will_overflow(uint32_t a, uint32_t b);
 bool is_valid(char c);
 
 /**
- * @param value number
- * @returns true if value is bigger than LIMIT (defined at handler.h) 
+ ** function for checking whether a number is bigger than LIMIT 
+ * @param number number checked
 */
-bool overflows(char* value);
+bool check(char* number);
+
+/**
+ * @returns true if converting c-string to unsigned long resulted in error
+*/
+bool overflows();
 
 /**
  ** initialize error_t struct
@@ -118,7 +131,7 @@ void msg_free(message_t* message);
  * @param values 2d array to free
  * @param rows number of rows of values
 */
-void free2d(char** values, uint32_t rows);
+void free2d(char** values, ul rows);
 
 /**
  ** split sequence of characters on ' '(32)(SPACE)
@@ -135,7 +148,7 @@ char** split(message_t* message, error_t* status);
  * @param status variable containing error info
  * @returns sum of values array
 */
-uint32_t sum(char** values, uint32_t no_values, error_t* status);
+ul sum(char** values, ul no_values, error_t* status);
 
 /**
  ** reset variables to initial state 
@@ -143,7 +156,7 @@ uint32_t sum(char** values, uint32_t no_values, error_t* status);
  * @param status wrapper for error reseted to NO_ERROR
  * @param output_message message served to client freed by free()
 */
-void reset(message_t message, error_t status, char* output_message);
+void reset(message_t* message, error_t* status, char* output_message);
 
 /**
  ** sum all numeric values in a given message if every condition is met
@@ -152,6 +165,6 @@ void reset(message_t message, error_t status, char* output_message);
  * @param status state of the protocol - could be NO_ERROR, NUMBER_OVERFLOW, SUM_OVERFLOW, BAD_CHARACTER, BAD_ENDING_SEQUENCE
  * @returns message containing sum of the numbers if everything went alright, else an error which occured
 */ 
-char* summation_protocol(uint32_t* no_message, message_t message, error_t status);
+char* summation_protocol(int* no_message, message_t message, error_t status);
 
 #endif
