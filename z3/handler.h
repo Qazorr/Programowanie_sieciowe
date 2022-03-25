@@ -165,6 +165,6 @@ void reset(message_t* message, error_t* status, char* output_message);
  * @param status state of the protocol - could be NO_ERROR, NUMBER_OVERFLOW, SUM_OVERFLOW, BAD_CHARACTER, BAD_ENDING_SEQUENCE
  * @returns message containing sum of the numbers if everything went alright, else an error which occured
 */ 
-char* summation_protocol(int* no_message, message_t message, error_t status);
+char* summation_protocol(message_t message, error_t status);
 
 #endif
