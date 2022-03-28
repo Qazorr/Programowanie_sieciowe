@@ -152,8 +152,10 @@ char* summation_protocol(message_t message, error_t status)
         if(err_check(status)) { //check whether sum() generated an error
             err_info(status.err);
             sprintf(output_message, "%s\n", ERROR_MESSAGE); //generate error message
-        } else
+        } else {
+            if(!SHOW_ON_SERVER) printf("%sMSG SENT%s\n", GREEN, RESET);
             sprintf(output_message, "%lu\n", output_sum); //generate message with sum
+        }
     }
     free2d(values, message.no_values);
     return output_message;
@@ -163,4 +165,5 @@ void reset(message_t *message, error_t *status, char* output_message)
     status_reset(status);
     msg_clear(message);
     free(output_message);
+    output_message = NULL;
 }

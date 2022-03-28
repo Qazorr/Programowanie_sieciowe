@@ -28,7 +28,7 @@
 #define ul unsigned long
 #define LF 10
 #define CR 13
-#define SHOW_ON_SERVER 1
+#define SHOW_ON_SERVER 0
 #define ERROR_MESSAGE "ERROR"
 
 /** 
