@@ -13,7 +13,7 @@ HANDLER = handler
 
 EXEC_SERVER = $(SERVER).x
 
-.PHONY: all clean
+.PHONY: all clean compile server
 
 all: $(exe)
 	@echo Files: {$(exe)} created. 
