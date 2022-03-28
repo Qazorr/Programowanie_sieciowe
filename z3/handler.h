@@ -24,7 +24,7 @@
 *? (65,535 bytes − 8-byte UDP header − 20-byte IP header).
 */
 
-#define BUFFER 65508 //maximum size of input
+#define BUFFER 65507 //maximum size of input
 #define ul unsigned long
 #define LF 10
 #define CR 13

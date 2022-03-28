@@ -46,11 +46,13 @@ void msg_free(message_t* message)
 }
 void free2d(char** values, ul rows)
 {
-    int i = 0;
-    for(i = 0; i<rows; i++)
-        free(*(values+i));
-    free(values);
-    values = NULL;
+    //if(values) {
+        int i = 0;
+        for(i = 0; i<rows; i++)
+            free(*(values+i));
+        free(values);
+        values = NULL;
+    //}
 }
 
 //! PROTOCOL SEGMENTS
@@ -60,7 +62,7 @@ char** split(message_t* message, error_t* status)
     char* mess = message->info;
     ul del_count = 0, mess_len = 0;
     const char delimiter = ' ';
-    bool empty = true;
+    //bool empty = true;
     
     //? counting the lenght of the message and number of delimiters (multi-spaces count as 1)
     while(*(mess)) {
@@ -77,17 +79,16 @@ char** split(message_t* message, error_t* status)
         if(*mess == delimiter) {
             del_count++;
             while(*mess == delimiter) { mess++; mess_len++; }
-            if(*mess && empty) empty = false;
         } else {
             mess_len++;
             mess++;
-        } 
+        }
     }
 
-    if(empty) {
-        status->err = NO_INPUT;
-        return NULL;
-    }
+    // if(empty) {
+    //     status->err = NO_INPUT;
+    //     return NULL;
+    // }
 
     mess -= (mess_len); //comming back at the beginning of the message
 
@@ -98,7 +99,7 @@ char** split(message_t* message, error_t* status)
 
     //we have one word more than the delimiter's count (Ala ma kota - 3 words, 2 delims)
     for(word_counter = 0; word_counter < del_count + 1; word_counter++) {
-        while(*(mess+word_len) != delimiter) word_len++; //finding the word lenght
+        while(!(*(mess+word_len)) == '\0' && *(mess+word_len) != delimiter) word_len++; //finding the word lenght
         *array = malloc(sizeof(**array) * (word_len+1)); //+1 because we need the space for '\0'
         memcpy(*array, mess, word_len); //copying the word to the allocated array
         *((*array) + word_len) = '\0';
