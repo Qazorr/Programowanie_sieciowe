@@ -46,13 +46,13 @@ void msg_free(message_t* message)
 }
 void free2d(char** values, ul rows)
 {
-    //if(values) {
+    if(values) {
         int i = 0;
         for(i = 0; i<rows; i++)
             free(*(values+i));
         free(values);
         values = NULL;
-    //}
+    }
 }
 
 //! PROTOCOL SEGMENTS
@@ -62,7 +62,7 @@ char** split(message_t* message, error_t* status)
     char* mess = message->info;
     ul del_count = 0, mess_len = 0;
     const char delimiter = ' ';
-    //bool empty = true;
+    bool empty = true;
     
     //? counting the lenght of the message and number of delimiters (multi-spaces count as 1)
     while(*(mess)) {
@@ -76,19 +76,22 @@ char** split(message_t* message, error_t* status)
             status->err = BAD_ENDING_SEQUENCE;
             return NULL;
         }
+        if(*mess == LF) //only accepting one line inputs
+            break;
         if(*mess == delimiter) {
             del_count++;
-            while(*mess == delimiter) { mess++; mess_len++; }
+            while(*mess == delimiter) { mess++; mess_len++; } //move past all whitespaces
         } else {
             mess_len++;
             mess++;
+            empty = false;
         }
     }
 
-    // if(empty) {
-    //     status->err = NO_INPUT;
-    //     return NULL;
-    // }
+    if(empty) {
+        status->err = NO_INPUT;
+        return NULL;
+    }
 
     mess -= (mess_len); //comming back at the beginning of the message
 
@@ -125,7 +128,7 @@ ul sum(char** values, ul no_values, error_t* status)
         if(will_overflow(total, val)) {
             status->err = SUM_OVERFLOW;
             return total;
-        } 
+        }
         total += val;
         values++;
     }
@@ -138,19 +141,19 @@ char* summation_protocol(message_t message, error_t status)
 {
     char* output_message = malloc(sizeof(*output_message) * BUFFER);
     memset(output_message, 0, strlen(output_message));
-    //printf("RECEIVED: %s%s%s", GREEN, message.info, RESET);   //print onto the server message from the client
+    if(SHOW_ON_SERVER) printf("RECEIVED: %s%s%s", GREEN, message.info, RESET);   //print onto the server message from the client
     char** values = split(&message, &status);   //split the message to single numbers
     
     if(err_check(status)) { //check whether split() generated an error
         err_info(status.err);
-        sprintf(output_message, "%s\r\n", ERROR_MESSAGE); //generate error message
+        sprintf(output_message, "%s\n", ERROR_MESSAGE); //generate error message
     } else {
         ul output_sum = sum(values, message.no_values, &status); //sum the numbers
         if(err_check(status)) { //check whether sum() generated an error
             err_info(status.err);
-            sprintf(output_message, "%s\r\n", ERROR_MESSAGE); //generate error message
+            sprintf(output_message, "%s\n", ERROR_MESSAGE); //generate error message
         } else
-            sprintf(output_message, "%lu\r\n", output_sum); //generate message with sum
+            sprintf(output_message, "%lu\n", output_sum); //generate message with sum
     }
     free2d(values, message.no_values);
     return output_message;

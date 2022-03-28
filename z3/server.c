@@ -21,6 +21,8 @@ static void sig_handler(int sigNum) { exit(EXIT_SUCCESS); }
 int main(int argc, char* argv[])
 {
     struct sockaddr_in server, client;
+    memset(&server, 0, sizeof(server));
+    memset(&client, 0, sizeof(client));
 
     if((socket_fd = socket(AF_INET, SOCK_DGRAM, 0)) == -1) {
         perror("socket error\n");
@@ -60,6 +62,7 @@ int main(int argc, char* argv[])
         }
 
         output_message = summation_protocol(message, status);
+        
         if(sendto(socket_fd, output_message, strlen(output_message), 0, (struct sockaddr* )&client, (socklen_t) addrlen) == -1) {
             perror("sendto error\n");
             exit(EXIT_FAILURE);
