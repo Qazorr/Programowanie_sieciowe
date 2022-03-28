@@ -24,10 +24,11 @@
 *? (65,535 bytes − 8-byte UDP header − 20-byte IP header).
 */
 
-#define BUFFER 65507 //maximum size of input
+#define BUFFER 65508 //maximum size of input
 #define ul unsigned long
 #define LF 10
 #define CR 13
+#define ERROR_MESSAGE "ERROR"
 
 /** 
  ** error states
@@ -36,13 +37,15 @@
  * @param SUM_OVERFLOW adding two numbers resulted in overflow
  * @param BAD_CHARACTER message containted not supported character
  * @param BAD_ENDING_SEQUENCE CR was not followed by LF
+ * @param NO_INPUT message contained no digits
 */
 typedef enum error {
     NO_ERROR,
     NUMBER_OVERFLOW,
     SUM_OVERFLOW,
     BAD_CHARACTER,
-    BAD_ENDING_SEQUENCE
+    BAD_ENDING_SEQUENCE,
+    NO_INPUT
 } error;
 
 /**

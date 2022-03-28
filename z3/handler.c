@@ -11,6 +11,7 @@ char* err_name(error err)
         case SUM_OVERFLOW: return "SUM_OVERFLOW";
         case BAD_CHARACTER: return "BAD_CHARACTER";
         case BAD_ENDING_SEQUENCE: return "BAD_ENDING_SEQUENCE";
+        case NO_INPUT: return "NO_INPUT";
         default: return "BAD_ERROR_STATE"; //shouldn't ever occur
     }
 }
@@ -59,6 +60,7 @@ char** split(message_t* message, error_t* status)
     char* mess = message->info;
     ul del_count = 0, mess_len = 0;
     const char delimiter = ' ';
+    bool empty = true;
     
     //? counting the lenght of the message and number of delimiters (multi-spaces count as 1)
     while(*(mess)) {
@@ -75,10 +77,16 @@ char** split(message_t* message, error_t* status)
         if(*mess == delimiter) {
             del_count++;
             while(*mess == delimiter) { mess++; mess_len++; }
+            if(*mess && empty) empty = false;
         } else {
             mess_len++;
             mess++;
         } 
+    }
+
+    if(empty) {
+        status->err = NO_INPUT;
+        return NULL;
     }
 
     mess -= (mess_len); //comming back at the beginning of the message
@@ -129,19 +137,19 @@ char* summation_protocol(message_t message, error_t status)
 {
     char* output_message = malloc(sizeof(*output_message) * BUFFER);
     memset(output_message, 0, strlen(output_message));
-    printf("RECEIVED: %s%s%s", GREEN, message.info, RESET);   //print onto the server message from the client
+    //printf("RECEIVED: %s%s%s", GREEN, message.info, RESET);   //print onto the server message from the client
     char** values = split(&message, &status);   //split the message to single numbers
     
     if(err_check(status)) { //check whether split() generated an error
         err_info(status.err);
-        sprintf(output_message, "%s%s%s\r\n", RED, "ERROR", RESET); //generate error message
+        sprintf(output_message, "%s\r\n", ERROR_MESSAGE); //generate error message
     } else {
         ul output_sum = sum(values, message.no_values, &status); //sum the numbers
         if(err_check(status)) { //check whether sum() generated an error
             err_info(status.err);
-            sprintf(output_message, "%s%s%s\r\n", RED, "ERROR", RESET); //generate error message
+            sprintf(output_message, "%s\r\n", ERROR_MESSAGE); //generate error message
         } else
-            sprintf(output_message, "%s%lu%s\r\n", GREEN, output_sum, RESET); //generate message with sum
+            sprintf(output_message, "%lu\r\n", output_sum); //generate message with sum
     }
     free2d(values, message.no_values);
     return output_message;

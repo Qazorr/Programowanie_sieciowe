@@ -51,17 +51,15 @@ int main(int argc, char* argv[])
     }
 
     int addrlen = sizeof(socklen_t*);
-    int no_message = 0;
-    
-    while(++no_message)
+
+    while(1)
     {
         if(recvfrom(socket_fd, message.info, BUFFER, 0, (struct sockaddr *) &client, (socklen_t *) &addrlen) == -1) {
             perror("recvfrom error\n");
             exit(EXIT_FAILURE);
         }
 
-        output_message = summation_protocol(&no_message, message, status);
-
+        output_message = summation_protocol(message, status);
         if(sendto(socket_fd, output_message, strlen(output_message), 0, (struct sockaddr* )&client, (socklen_t) addrlen) == -1) {
             perror("sendto error\n");
             exit(EXIT_FAILURE);

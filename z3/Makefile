@@ -18,6 +18,11 @@ EXEC_SERVER = $(SERVER).x
 all: $(exe)
 	@echo Files: {$(exe)} created. 
 
+#do uruchomienia z dodatkowymi flagami/programami
+compile:
+	@gcc $(FLAGS) $(SERVER).c $(HANDLER).c -o $(EXEC_SERVER) 
+
+#uruchamia serwer
 server: 
 	@gcc $(FLAGS) $(SERVER).c $(HANDLER).c -o $(EXEC_SERVER) 
 	@./$(EXEC_SERVER)
