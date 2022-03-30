@@ -70,14 +70,14 @@ char** split(message_t* message, error_t* status)
             status->err = BAD_CHARACTER; 
             return NULL;
         }
+        if(*mess == LF) //only accepting one line inputs
+            break;
         if(*mess == CR) {   //if CR ('\r) occured, we check if ('\n) is next to it, if not switch error state
             if(*(mess+1) == LF) 
                 break;
             status->err = BAD_ENDING_SEQUENCE;
             return NULL;
         }
-        if(*mess == LF) //only accepting one line inputs
-            break;
         if(*mess == delimiter) {
             del_count++;
             while(*mess == delimiter) { mess++; mess_len++; } //move past all whitespaces
