@@ -13,7 +13,7 @@ HANDLER = handler
 
 EXEC_SERVER = $(SERVER).x
 
-.PHONY: all clean compile server
+.PHONY: all clean compile server test
 
 all: $(exe)
 	@echo Files: {$(exe)} created. 
@@ -26,6 +26,9 @@ compile:
 server: 
 	@gcc $(FLAGS) $(SERVER).c $(HANDLER).c -o $(EXEC_SERVER) 
 	@./$(EXEC_SERVER)
+
+test:
+	@tester/script.sh
 
 %.o: %.c
 	@$(CO) $^ $(FLAGS) -c
