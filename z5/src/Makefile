@@ -51,6 +51,37 @@ sockat1:
 	@clear
 	printf "1 2 3 4 5\r\n6 7 8 9\r\n" | socat stdio TCP:127.0.0.1:2020
 
+spaces:
+	@clear
+	printf "1 2  3 4 5\r\n" | socat stdio TCP:127.0.0.1:2020
+	printf " 1 2 3 4 5\r\n" | socat stdio TCP:127.0.0.1:2020
+	printf "1 2 3 4 5 \r\n" | socat stdio TCP:127.0.0.1:2020
+	printf "\r\n" | socat stdio TCP:127.0.0.1:2020
+	printf "1 2 3 4 5\r\n" | socat stdio TCP:127.0.0.1:2020
+
+
+letters:
+	@clear
+	printf "1 2 e\r\n" | socat stdio TCP:127.0.0.1:2020
+
+sockat2:
+	@clear
+	printf "1 2 3 4 5 6 7 8 9 10\r\n" | socat stdio TCP:127.0.0.1:2020
+	printf "1 2 3 4 5 6 r 8 9 10\r\n" | socat stdio TCP:127.0.0.1:2020
+	printf "1 2 3 4\r 5 6 7 8 9 10\r\n" | socat stdio TCP:127.0.0.1:2020
+	printf "1 2 3 4 5 6\n 7 8 9 10\r\n" | socat stdio TCP:127.0.0.1:2020
+	printf " 1 2 3 4 5 6 7 8 9 10\r\n" | socat stdio TCP:127.0.0.1:2020
+	printf " 1 2 3 4 5 6 7 8 9 10 \r\n" | socat stdio TCP:127.0.0.1:2020
+	printf "13 14 15\r\n" | socat stdio TCP:127.0.0.1:2020
+	printf "1r3 14 15\r\n" | socat stdio TCP:127.0.0.1:2020
+	printf "1            3                    6            2          3\r\n" | socat stdio TCP:127.0.0.1:2020
+	printf "100 200 300 400 5OO 600\r\n" | socat stdio TCP:127.0.0.1:2020
+	printf "alamakota \r\n" | socat stdio TCP:127.0.0.1:2020
+	printf "18446744073709551615\r\n" | socat stdio TCP:127.0.0.1:2020
+	printf "18446744073709551615 1 1\r\n" | socat stdio TCP:127.0.0.1:2020
+	printf "18446744073709551616\r\n" | socat stdio TCP:127.0.0.1:2020
+	printf "4611686018427387904 4611686018427387904 4611686018427387904 4611686018427387904\r\n" | socat stdio TCP:127.0.0.1:2020
+
 test:
 	@tester/script.sh
 
