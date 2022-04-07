@@ -16,9 +16,11 @@
 
 #define PORT 2020
 #define BACKLOG_SIZE 8
+#define TIMEOUT_SEC 5
+#define TIMEOUT_USEC 0
 
 #define BUFFER 16
-#define LINE_BUFFER 256
+#define LINE_BUFFER 1024
 
 #define CR 13
 #define LF 10
@@ -27,19 +29,21 @@
 
 #define RESET "\033[0m"
 #define RED "\033[31m"
+#define BOLD_RED "\033[1;31m"
 #define GREEN "\033[32m"
+#define BOLD_GREEN "\033[1;32m"
 #define YELLOW "\033[33m"
 
 #define ul unsigned long
 
-void debug(char *args, ...) {
+void _debug(char *args, ...) {
   printf("\033[1;31m[DEBUG]\033[0m ");
   va_list _args;
   va_start(_args, args);
   vprintf(args, _args); 
   va_end(_args);
 }
-void info(char *args, ...) {
+void _info(char *args, ...) {
   printf("\033[1;32m[INFO]\033[0m ");
   va_list _args;
   va_start(_args, args);
@@ -48,8 +52,17 @@ void info(char *args, ...) {
   
   va_end(_args);
 }
-void no_debug(char *args, ...) { }
-void no_info(char *args, ...) { }
+void _mode(char *args, ...) {
+  printf("\033[1;36m[MODE]\033[0m ");
+  va_list _args;
+  va_start(_args, args);
+
+  vprintf(args, _args);
+  
+  va_end(_args);
+}
+void _no_debug(char *args, ...) { }
+void _no_info(char *args, ...) { }
 
 typedef enum error {
     NO_ERROR,
@@ -306,21 +319,32 @@ void help_info()
     exit(EXIT_SUCCESS);
 }
 
+void mode_info()
+{
+    _mode("Server on port: %s%d%s\n", BOLD_GREEN, PORT, RESET);
+    _mode("Maximum one-time read size: %s%d%s\n",BOLD_GREEN, BUFFER, RESET);
+    _mode("Line lenght: %s%d%s\n", BOLD_GREEN, LINE_BUFFER, RESET);
+    _mode("Number type used: %sUNSIGNED LONG%s\n", BOLD_GREEN, RESET);
+    _mode("Client will be timed out after: %s%d SECONDS%s and %s%d MICROSECONDS%s\n", BOLD_GREEN, TIMEOUT_SEC, RESET, BOLD_GREEN, TIMEOUT_USEC, RESET);
+}
+
 int main(int argc, char* argv[])
 {
     if(argc > 1) {
         int i;
         bool modes[MODE_AMOUNT] = {false, false, false, false, false};
         for(i = 1; i<argc; i++) modes[convert_to_mode(argv[i])] = true;
-        if(modes[0]) bad_arg_info();
-        if(modes[2]) help_info();
-        if(modes[3]) { printf("\033[1;32mSERVER-INFO ENABLED%s\n", RESET); inf = &info; } else inf = &no_info;
-        if(modes[4]) { printf("\033[1;32mSERVER-DEBUG ENABLED%s\n", RESET); dbg = &debug; } else dbg = &no_debug;
+        if(modes[BAD_ARGUMENT]) bad_arg_info();
+        if(modes[HELP_INFO]) help_info();
+        if(modes[INFO]) { _mode("SERVER-INFO %sENABLED%s\n", BOLD_GREEN, RESET); inf = &_info; } else inf = &_no_info;
+        if(modes[DEBUG]) { _mode("SERVER-DEBUG %sENABLED%s\n", BOLD_GREEN, RESET); dbg = &_debug; } else dbg = &_no_debug;
     } else {
         printf("%sYou can run the program with -h or -H flag for additional help info.%s\n", YELLOW, RESET);
-        inf = &no_info;
-        dbg = &no_debug;
+        inf = &_no_info;
+        dbg = &_no_debug;
     }
+
+    mode_info();
 
     struct sockaddr_in  server, client;
     memset(&server, 0, sizeof(server));
@@ -360,12 +384,9 @@ int main(int argc, char* argv[])
         {
             if(buffer.amount_read == -1) break; //timeout
             (*inf)("READ \033[1;32m%d\033[0m BYTES OF DATA\n", buffer.amount_read);
-            //whole_chunk_in_ascii();
             if(line_read()) { 
                 (*dbg)("LINE = %s\n", line.info);
                 line_in_ascii();
-                //whole_chunk_in_ascii();
-
                 line_interpret();
                 if(err_check()) (*inf)("--\033[1;33m%s\033[0m OCCURED--\n", name(line.status));
                 write(client_fd, line.info, strlen(line.info));
@@ -376,14 +397,10 @@ int main(int argc, char* argv[])
                 while(buffer.amount_read != 0) {
                     if(line_read()) {
                         (*dbg)("LINE = %s\n", line.info);                
-                        //line_in_ascii();
                         line_interpret();
                         (*inf)("LINE SENT: %s\n", line.info);
                         write(client_fd, line.info, strlen(line.info));
                         line_reset();
-
-                    } else {
-                        //line_in_ascii();
                     }
                 }
             } else {
