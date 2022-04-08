@@ -104,7 +104,8 @@ int convert_to_mode(char* argv)
     else return (int)BAD_ARGUMENT;
 }
 
-int server_fd, client_fd;
+struct sockaddr_in server, client;
+int server_fd = 0, client_fd = 0;
 bool CR_detected = false;
 buffer_t buffer = {.amount_read = 0, .stop_index = -1, .space_detected = false, };
 line_t line = {.status = NO_ERROR, .digit_detected = false};
@@ -147,10 +148,10 @@ void connection_lost(const char* cause)
 {
     char* mess = malloc(sizeof(*mess) * 64);
     sprintf(mess, "Connection %s\r\n", cause);
-    if(write(client_fd, mess, strlen(mess)) == -1) {
-        perror("write error\n");
-        exit(EXIT_FAILURE);
-    }
+    // if(write(client_fd, mess, strlen(mess)) == -1) {
+    //     perror("write error\n");
+    //     exit(EXIT_FAILURE);
+    // }
     if(close(client_fd) == -1) {
         perror("close error\n");
         exit(EXIT_FAILURE);
@@ -197,7 +198,6 @@ bool line_read()
             CR_detected = true;
             (*dbg)("CR DETECTED ON [%d]\n", i);
             if(buffer.space_detected) {
-                (*dbg)("ERROR OCCURED ON LINE 171\n");
                 err_set(BAD_WHITESPACE);
             }
         } 
@@ -210,7 +210,6 @@ bool line_read()
                 break;
             } else {
                 CR_detected = false;
-                (*dbg)("ERROR OCCURED ON LINE 185\n");
                 err_set(SINGLE_LF_DETECTED);
             }
         } else {
@@ -218,20 +217,17 @@ bool line_read()
                 CR_detected = false;
                 err_set(BAD_ENDING_SEQUENCE);
                 buffer.space_detected = false;
-                (*dbg)("ERROR OCCURED ON LINE 193\n");
             } else if(!isdigit(buffer.info[i])) {
                 if(buffer.info[i] == SPACE) {
                     if(!buffer.space_detected) {
                         buffer.space_detected = true;
                     } else {
                         err_set(BAD_WHITESPACE);
-                        (*dbg)("ERROR OCCURED ON LINE 198\n");  
                     }
                 } else {
                     (*dbg)("NON-DIGIT FOUND ON [%d]\n", i);
                     err_set(BAD_CHARACTER);
                     buffer.space_detected = false;
-                    (*dbg)("ERROR OCCURED ON LINE 202");
                 } 
             } else {
                 buffer.space_detected = false;
@@ -274,7 +270,6 @@ void line_interpret()
     if(line.digit_detected) {
         if(line.info[0] == SPACE) {
             err_set(BAD_WHITESPACE);
-            (*dbg)("ERROR OCCURED ON LINE 248\n");  
         }
         else {
             char* number = strtok(line.info, " ");
@@ -285,7 +280,6 @@ void line_interpret()
         }
     } else {
         err_set(EMPTY_LINE);
-        (*dbg)("ERROR OCCURED ON LINE 260\n");  
     }
     err_check() ? sprintf(line.info, "%s\r\n", ERROR_MESSAGE) : sprintf(line.info, "%lu\r\n", sum);
 }
@@ -325,10 +319,10 @@ void mode_info()
     _mode("Maximum one-time read size: %s%d%s\n",BOLD_GREEN, BUFFER, RESET);
     _mode("Line lenght: %s%d%s\n", BOLD_GREEN, LINE_BUFFER, RESET);
     _mode("Number type used: %sUNSIGNED LONG%s\n", BOLD_GREEN, RESET);
-    _mode("Client will be timed out after: %s%d SECONDS%s and %s%d MICROSECONDS%s\n", BOLD_GREEN, TIMEOUT_SEC, RESET, BOLD_GREEN, TIMEOUT_USEC, RESET);
+    _mode("Client will be timed out after: %s%d SECONDS%s and %s%d MICROSECONDS%s\n\n", BOLD_GREEN, TIMEOUT_SEC, RESET, BOLD_GREEN, TIMEOUT_USEC, RESET);
 }
 
-int main(int argc, char* argv[])
+void handle_arguments(int argc, char* argv[])
 {
     if(argc > 1) {
         int i;
@@ -343,10 +337,13 @@ int main(int argc, char* argv[])
         inf = &_no_info;
         dbg = &_no_debug;
     }
+}
 
+int main(int argc, char* argv[])
+{
+    handle_arguments(argc, argv);
     mode_info();
 
-    struct sockaddr_in  server, client;
     memset(&server, 0, sizeof(server));
     memset(&client, 0, sizeof(client));
 
@@ -378,7 +375,7 @@ int main(int argc, char* argv[])
             exit(EXIT_FAILURE);
         }
 
-        set_timeout(5, 0); //set timeout on 5 seconds
+        set_timeout(TIMEOUT_SEC, TIMEOUT_USEC); //set timeout on 5 seconds
     
         while((buffer.amount_read = read(client_fd, buffer.info, BUFFER)) != 0)
         {
@@ -388,7 +385,9 @@ int main(int argc, char* argv[])
                 (*dbg)("LINE = %s\n", line.info);
                 line_in_ascii();
                 line_interpret();
+                fflush(stdout);
                 if(err_check()) (*inf)("--\033[1;33m%s\033[0m OCCURED--\n", name(line.status));
+                else (*inf)("--%sPROTOCOL SUCCEDED%s--\n", BOLD_GREEN, RESET);
                 write(client_fd, line.info, strlen(line.info));
                 (*inf)("LINE SENT: %s\n", line.info);
                 line_reset();
