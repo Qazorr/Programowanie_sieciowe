@@ -32,7 +32,7 @@ int main(int argc, char* argv[])
     }
 
     char card[BUFFER] = "1 2 3";
-    char card2[BUFFER]= "4 5\r\n";
+    char card2[BUFFER]= " 4 5\r\n";
 
     if(write(server_fd, card, strlen(card)) == -1) {
         perror("write error");

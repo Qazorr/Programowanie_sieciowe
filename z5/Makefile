@@ -1,7 +1,10 @@
 .SUFFIXES: .c .h .x .o
 
-CO = gcc
+CO 	= gcc
 FLAGS = -std=c99 -Wall -pedantic
+DEBUG = -d
+INFO = -v
+HELP = -h
 TO_CLEAN = *.x
 
 src = $(wildcard *.c)
@@ -23,18 +26,35 @@ compile:
 	@gcc $(FLAGS) $(SERVER).c -o $(EXEC_SERVER) 
 
 #uruchamia serwer
-server: 
-	@gcc $(FLAGS) $(SERVER).c -o $(EXEC_SERVER) 
+server: compile
 	@clear
 	@./$(EXEC_SERVER)
+
+help: compile
+	@clear
+	@./$(EXEC_SERVER) -h
+
+info: compile
+	@clear
+	@./$(EXEC_SERVER) -v
+
+debug: compile
+	@clear
+	@./$(EXEC_SERVER) -d
+
+info-debug: compile
+	@clear
+	@./$(EXEC_SERVER) -v -d
+
+script:
+	@tester/script.sh
 
 client: 
 	@gcc $(FLAGS) client.c -o client.x 
 	@clear
 	@./client.x
 
-valgrind: 
-	@gcc $(FLAGS) $(SERVER).c -o $(EXEC_SERVER) 
+valgrind: compile 
 	@clear
 	@valgrind ./$(EXEC_SERVER)
 
@@ -58,7 +78,6 @@ spaces:
 	printf "\r\n" | socat stdio TCP:127.0.0.1:2020
 	printf " \r\n" | socat stdio TCP:127.0.0.1:2020
 	printf "  \r\n" | socat stdio TCP:127.0.0.1:2020
-
 
 letters:
 	@clear
