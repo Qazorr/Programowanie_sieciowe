@@ -36,6 +36,7 @@
 
 #define ul unsigned long
 
+//? -- MODE FUCNTIONS --
 void _debug(char *args, ...) {
   printf("\033[1;31m[DEBUG]\033[0m ");
   va_list _args;
@@ -63,7 +64,9 @@ void _mode(char *args, ...) {
 }
 void _no_debug(char *args, ...) { }
 void _no_info(char *args, ...) { }
+//? -------------------
 
+//? -- STRUCTURES --
 typedef enum error {
     NO_ERROR,
     BAD_ENDING_SEQUENCE,
@@ -74,20 +77,17 @@ typedef enum error {
     SUM_OVERFLOW,
     BAD_CHARACTER
 } error_t;
-
 typedef struct buffer {
     char info[BUFFER];
     short amount_read;
     short stop_index;
     bool space_detected;
 } buffer_t;
-
 typedef struct line {
     char info[LINE_BUFFER];
     bool digit_detected;
     error_t status;
 } line_t;
-
 typedef enum mode {
     BAD_ARGUMENT,
     NORMAL,
@@ -95,24 +95,19 @@ typedef enum mode {
     INFO,
     DEBUG
 } mode;
+//? ----------------
 
-int convert_to_mode(char* argv)
-{
-    if(!strcmp(argv, "-h") || !strcmp(argv, "-H")) return (int)HELP_INFO;
-    else if(!strcmp(argv, "-d") || !strcmp(argv, "-D")) return (int)DEBUG;
-    else if(!strcmp(argv, "-v") || !strcmp(argv, "-V")) return (int)INFO;
-    else return (int)BAD_ARGUMENT;
-}
-
+//? -- GLOBAL VARIABLES --
 struct sockaddr_in server, client;
 int server_fd = 0, client_fd = 0;
 bool CR_detected = false;
 buffer_t buffer = {.amount_read = 0, .stop_index = -1, .space_detected = false, };
 line_t line = {.status = NO_ERROR, .digit_detected = false};
-
 void (*dbg)(char *args, ...);
 void (*inf)(char *args, ...);
-
+//?-----------------------
+ 
+//? -- ERROR FUNCTIONS --
 char* name(error_t error)
 {
     switch(error)
@@ -130,7 +125,9 @@ char* name(error_t error)
 }
 void err_set(error_t error) { if(line.status == NO_ERROR) line.status = error; }
 bool err_check() { return line.status != NO_ERROR; }
+//? --------------------
 
+//? -- VARIABLE RESET --
 void buffer_reset()
 {
     memset(buffer.info, 0, BUFFER);
@@ -143,22 +140,21 @@ void line_reset()
     line.digit_detected = false;
     line.status = NO_ERROR;
 }
+//?--------------------
 
+//? -- DEBUG FUNCTIONS --
 void connection_lost(const char* cause)
 {
-    char* mess = malloc(sizeof(*mess) * 64);
-    sprintf(mess, "Connection %s\r\n", cause);
-    // if(write(client_fd, mess, strlen(mess)) == -1) {
+    // if(write(client_fd, ERROR_MESSAGE, strlen(ERROR_MESSAGE)) == -1) {
     //     perror("write error\n");
     //     exit(EXIT_FAILURE);
     // }
+    (*inf)("CONNECTION %s\n", cause);
     if(close(client_fd) == -1) {
         perror("close error\n");
         exit(EXIT_FAILURE);
     }
-    free(mess);
 } 
-
 void whole_chunk_in_ascii()
 {
     int i = 0;
@@ -172,7 +168,6 @@ void whole_chunk_in_ascii()
     (*dbg)("stop=%d | read=%d\n", buffer.stop_index, buffer.amount_read);
     (*dbg)("------------------------------\n");
 }
-
 void line_in_ascii()
 {
     int i = 0;
@@ -186,19 +181,43 @@ void line_in_ascii()
     (*dbg)("error=%s\n", name(line.status));
     (*dbg)("------------------------------\n");
 }
+//? --------------------
 
-//signalize if the read was interrupted
+//? -- PROTOCOL SEGMENTS --
+void set_timeout(int seconds, int microseconds)
+{
+    struct timeval timeout;
+    timeout.tv_sec = seconds;
+    timeout.tv_usec = microseconds;
+    socklen_t timeout_len = sizeof(struct timeval);
+
+    if(setsockopt(client_fd, SOL_SOCKET, SO_RCVTIMEO, (const char*) &timeout, timeout_len) == -1) {
+        perror("setsockopt error\n");
+        exit(EXIT_FAILURE);
+    }
+}
+bool will_overflow(ul a, ul b) { return a > ULONG_MAX - b; }
 bool line_read()
 {
     int i = 0;
     bool interrupted = false;
 
     for(; i < buffer.amount_read; i++) {
+        if(buffer.info[i] == '\0') {
+            (*dbg)("\\0 DETECTED ON [%d]\n", i);
+            err_set(BAD_CHARACTER);
+        }
         if(buffer.info[i] == CR) {
-            CR_detected = true;
-            (*dbg)("CR DETECTED ON [%d]\n", i);
-            if(buffer.space_detected) {
-                err_set(BAD_WHITESPACE);
+            if(!CR_detected) {
+                CR_detected = true;
+                (*dbg)("CR DETECTED ON [%d]\n", i);
+                if(buffer.space_detected) {
+                    err_set(BAD_WHITESPACE);
+                }
+            } 
+            else {
+                (*dbg)("SECOND CR DETECTED ON [%d]", i);
+                err_set(BAD_ENDING_SEQUENCE);
             }
         } 
         else if(buffer.info[i] == LF) {
@@ -246,9 +265,6 @@ bool line_read()
     } 
     return interrupted;
 }
-
-bool will_overflow(ul a, ul b) { return a > ULONG_MAX - b; }
-
 void safe_add(char* number, ul* sum)
 {
     ul num = strtoul(number, NULL, 10);
@@ -263,7 +279,6 @@ void safe_add(char* number, ul* sum)
             *sum += num;
     }
 }
-
 void line_interpret()
 {
     ul sum = 0;
@@ -283,20 +298,16 @@ void line_interpret()
     }
     err_check() ? sprintf(line.info, "%s\r\n", ERROR_MESSAGE) : sprintf(line.info, "%lu\r\n", sum);
 }
+//? -----------------------
 
-void set_timeout(int seconds, int microseconds)
+//? -- ARGUMENTS HANDLE --
+int convert_to_mode(char* argv)
 {
-    struct timeval timeout;
-    timeout.tv_sec = seconds;
-    timeout.tv_usec = microseconds;
-    socklen_t timeout_len = sizeof(struct timeval);
-
-    if(setsockopt(client_fd, SOL_SOCKET, SO_RCVTIMEO, (const char*) &timeout, timeout_len) == -1) {
-        perror("setsockopt error\n");
-        exit(EXIT_FAILURE);
-    }
+    if(!strcmp(argv, "-h") || !strcmp(argv, "-H")) return (int)HELP_INFO;
+    else if(!strcmp(argv, "-d") || !strcmp(argv, "-D")) return (int)DEBUG;
+    else if(!strcmp(argv, "-v") || !strcmp(argv, "-V")) return (int)INFO;
+    else return (int)BAD_ARGUMENT;
 }
-
 void bad_arg_info()
 {
     printf("%s-------------------------------------%s\n", YELLOW, RESET);
@@ -304,7 +315,6 @@ void bad_arg_info()
     printf("-------------------------------------%s\n", RESET);
     exit(EXIT_FAILURE);
 }
-
 void help_info()
 {
     printf("%s-------------------------------------\n", YELLOW);
@@ -312,7 +322,6 @@ void help_info()
     printf("-------------------------------------%s\n", RESET);
     exit(EXIT_SUCCESS);
 }
-
 void mode_info()
 {
     _mode("Server on port: %s%d%s\n", BOLD_GREEN, PORT, RESET);
@@ -321,7 +330,6 @@ void mode_info()
     _mode("Number type used: %sUNSIGNED LONG%s\n", BOLD_GREEN, RESET);
     _mode("Client will be timed out after: %s%d SECONDS%s and %s%d MICROSECONDS%s\n\n", BOLD_GREEN, TIMEOUT_SEC, RESET, BOLD_GREEN, TIMEOUT_USEC, RESET);
 }
-
 void handle_arguments(int argc, char* argv[])
 {
     if(argc > 1) {
@@ -381,6 +389,7 @@ int main(int argc, char* argv[])
         {
             if(buffer.amount_read == -1) break; //timeout
             (*inf)("READ \033[1;32m%d\033[0m BYTES OF DATA\n", buffer.amount_read);
+            //whole_chunk_in_ascii();
             if(line_read()) { 
                 (*dbg)("LINE = %s\n", line.info);
                 line_in_ascii();
@@ -394,6 +403,7 @@ int main(int argc, char* argv[])
 
                 memset(line.info, 0, LINE_BUFFER);
                 while(buffer.amount_read != 0) {
+                    //whole_chunk_in_ascii();
                     if(line_read()) {
                         (*dbg)("LINE = %s\n", line.info);                
                         line_interpret();
