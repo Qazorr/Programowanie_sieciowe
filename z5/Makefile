@@ -22,7 +22,7 @@ all: $(exe)
 	@echo Files: {$(exe)} created. 
 
 #do uruchomienia z dodatkowymi flagami/programami
-compile:
+compile: clean
 	@gcc $(FLAGS) $(SERVER).c -o $(EXEC_SERVER) 
 
 #uruchamia serwer
@@ -47,9 +47,10 @@ info-debug: compile
 	@./$(EXEC_SERVER) -v -d
 
 script:
-	@tester/script.sh
+	@clear
+	@bash tester/runtests.sh
 
-client: 
+test: 
 	@gcc $(FLAGS) client.c -o client.x 
 	@clear
 	@./client.x
@@ -60,33 +61,9 @@ valgrind: compile
 
 ncat:
 	@clear
-	ncat -v -C localhost 2020 
-
-sockat:
-	@clear
-	printf "3 429496729\r\n1 2 3 4\r\n" | socat stdio TCP:127.0.0.1:2020
-
-sockat1:
-	@clear
-	printf "1 2 3 4 5\r\n6 7 8 9\r\n" | socat stdio TCP:127.0.0.1:2020
-
-spaces:
-	@clear
-	printf " 1 2 3 4\r\n" | socat stdio TCP:127.0.0.1:2020
-	printf "1 2  3 4\r\n" | socat stdio TCP:127.0.0.1:2020
-	printf "1 2 3 4 \r\n" | socat stdio TCP:127.0.0.1:2020
-	printf "\r\n" | socat stdio TCP:127.0.0.1:2020
-	printf " \r\n" | socat stdio TCP:127.0.0.1:2020
-	printf "  \r\n" | socat stdio TCP:127.0.0.1:2020
-
-letters:
-	@clear
-	printf "1 2 e\r\n" | socat stdio TCP:127.0.0.1:2020
-	printf "1r3 14 15\r\n" | socat stdio TCP:127.0.0.1:2020
-	printf "1 2 e\r\n" | socat stdio TCP:127.0.0.1:2020
-	printf "1 2 e\r\n" | socat stdio TCP:127.0.0.1:2020
+	ncat -v -C localhost 2020
 	
-test:
+socat:
 	@clear
 	printf "1 2 3 4 5 6 7 8 9 10\r\n" | socat stdio TCP:127.0.0.1:2020
 	printf "1 2 3 4 5 6 r 8 9 10\r\n" | socat stdio TCP:127.0.0.1:2020

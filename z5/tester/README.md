@@ -1,0 +1,1 @@
+Tester for the TCP server made by Karosek
