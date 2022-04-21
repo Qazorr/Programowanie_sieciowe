@@ -383,6 +383,8 @@ int main(int argc, char* argv[])
             exit(EXIT_FAILURE);
         }
 
+        (*inf)("CLIENT = %d = CONNECTED\n", client_fd);
+
         set_timeout(TIMEOUT_SEC, TIMEOUT_USEC); //set timeout on 5 seconds
     
         while((buffer.amount_read = read(client_fd, buffer.info, BUFFER)) != 0)
@@ -418,9 +420,9 @@ int main(int argc, char* argv[])
         }
         
         if(buffer.amount_read == -1) {
-            connection_lost("timed out");
+            connection_lost("TIMED OUT");
         } else {
-            connection_lost("lost");
+            connection_lost("LOST");
         }
     }
 }
