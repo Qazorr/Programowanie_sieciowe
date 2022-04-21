@@ -25,7 +25,7 @@ using std::chrono::system_clock;
 const short port = 2020;
 const char* ip = "127.0.0.1";
 
-#define TIMEOUT_TIME        5s
+#define TIMEOUT_TIME        10s
 
 void startTest(string input, string expected);
 void startSegmTest(vector<string> inputs, string expected);
