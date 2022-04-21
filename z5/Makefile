@@ -9,14 +9,12 @@ TO_CLEAN = *.x
 
 src = $(wildcard *.c)
 obj = $(src:.c=.o)
-exe = $(src:.c=.x)
 
 MAIN = main
-HANDLER = handler
 
-EXEC = $(MAIN).x
+EXEC = $(MAIN).x # entry point
 
-.PHONY: all clean compile server test ncat
+.PHONY: run help info debug info-debug ncat tests timeout clean
 
 %.o: %.c
 	@$(CO) $^ $(FLAGS) -c
@@ -31,25 +29,29 @@ compile:
 	@gcc $(FLAGS) $(src) -o $(EXEC) 
 
 #uruchamia serwer
-server: compile
+run: compile
 	@clear
 	@./$(EXEC)
 
 help: compile
 	@clear
-	@./$(EXEC) -h
+	@./$(EXEC) $(HELP)
 
 info: compile
 	@clear
-	@./$(EXEC) -v
+	@./$(EXEC) $(INFO)
 
 debug: compile
 	@clear
-	@./$(EXEC) -d
+	@./$(EXEC) $(DEBUG)
 
 info-debug: compile
 	@clear
-	@./$(EXEC) -v -d
+	@./$(EXEC) $(INFO) $(DEBUG)
+
+ncat:
+	@clear
+	ncat -vC localhost 2020
 
 tests:
 	@clear
@@ -58,10 +60,6 @@ tests:
 timeout:
 	@clear
 	@./tester/tester.x
-
-ncat:
-	@clear
-	ncat -vC localhost 2020
 
 clean:
 	@rm $(TO_CLEAN)
