@@ -11,83 +11,57 @@ src = $(wildcard *.c)
 obj = $(src:.c=.o)
 exe = $(src:.c=.x)
 
-SERVER = server
+MAIN = main
 HANDLER = handler
 
-EXEC_SERVER = $(SERVER).x
+EXEC = $(MAIN).x
 
 .PHONY: all clean compile server test ncat
-
-all: $(exe)
-	@echo Files: {$(exe)} created. 
-
-#do uruchomienia z dodatkowymi flagami/programami
-compile: clean
-	@gcc $(FLAGS) $(SERVER).c -o $(EXEC_SERVER) 
-
-#uruchamia serwer
-server: compile
-	@clear
-	@./$(EXEC_SERVER)
-
-help: compile
-	@clear
-	@./$(EXEC_SERVER) -h
-
-info: compile
-	@clear
-	@./$(EXEC_SERVER) -v
-
-debug: compile
-	@clear
-	@./$(EXEC_SERVER) -d
-
-info-debug: compile
-	@clear
-	@./$(EXEC_SERVER) -v -d
-
-script:
-	@clear
-	@bash tester/runtests.sh
-
-test: 
-	@gcc $(FLAGS) client.c -o client.x 
-	@clear
-	@./client.x
-
-valgrind: compile 
-	@clear
-	@valgrind ./$(EXEC_SERVER)
-
-ncat:
-	@clear
-	ncat -v -C localhost 2020
-	
-socat:
-	@clear
-	printf "1 2 3 4 5 6 7 8 9 10\r\n" | socat stdio TCP:127.0.0.1:2020
-	printf "1 2 3 4 5 6 r 8 9 10\r\n" | socat stdio TCP:127.0.0.1:2020
-	printf "100 200 300 400 5OO\r\n" | socat stdio TCP:127.0.0.1:2020
-	printf "1 2 3 4\r\n1 2 3 4\r\n" | socat stdio TCP:127.0.0.1:2020
-	printf "1 2\n 3 4\r\n" | socat stdio TCP:127.0.0.1:2020
-	printf "1 2\r 3 4\r\n" | socat stdio TCP:127.0.0.1:2020
-	printf " 1 2 3 4\r\n" | socat stdio TCP:127.0.0.1:2020
-	printf "1 2  3 4\r\n" | socat stdio TCP:127.0.0.1:2020
-	printf "1 2 3 4 \r\n" | socat stdio TCP:127.0.0.1:2020
-	printf "\r\n" | socat stdio TCP:127.0.0.1:2020
-	printf " \r\n" | socat stdio TCP:127.0.0.1:2020
-	printf "  \r\n" | socat stdio TCP:127.0.0.1:2020
-	printf "18446744073709551615\r\n" | socat stdio TCP:127.0.0.1:2020
-	printf "18446744073709551615 1 1\r\n" | socat stdio TCP:127.0.0.1:2020
-	printf "18446744073709551616\r\n" | socat stdio TCP:127.0.0.1:2020
-	printf "4611686018427387904 4611686018427387904 4611686018427387904 4611686018427387904\r\n" | socat stdio TCP:127.0.0.1:2020
-	printf "4611686018427387904 4611686018427387904 4611686018427387904 4611686018427387903\r\n" | socat stdio TCP:127.0.0.1:2020
 
 %.o: %.c
 	@$(CO) $^ $(FLAGS) -c
 
 %.x: %.c
 	@$(CO) $< $(FLAGS) -o $@
+
+all: $(exe)
+	@echo Files: {$(exe)} created. 
+
+compile:
+	@gcc $(FLAGS) $(src) -o $(EXEC) 
+
+#uruchamia serwer
+server: compile
+	@clear
+	@./$(EXEC)
+
+help: compile
+	@clear
+	@./$(EXEC) -h
+
+info: compile
+	@clear
+	@./$(EXEC) -v
+
+debug: compile
+	@clear
+	@./$(EXEC) -d
+
+info-debug: compile
+	@clear
+	@./$(EXEC) -v -d
+
+tests:
+	@clear
+	@bash tester/runtests.sh
+
+timeout:
+	@clear
+	@./tester/tester.x
+
+ncat:
+	@clear
+	ncat -vC localhost 2020
 
 clean:
 	@rm $(TO_CLEAN)
