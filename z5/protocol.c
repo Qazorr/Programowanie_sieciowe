@@ -251,7 +251,6 @@ void summation_protocol()
         {
             if(buffer.amount_read == -1) break; //timeout
             (*inf)("[%d] READ \033[1;32m%d\033[0m BYTES OF DATA\n", client_number, buffer.amount_read);
-            //whole_chunk_in_ascii();
             if(line_read()) { 
                 (*dbg)("LINE = %s\n", line.info);
                 line_in_ascii();
@@ -265,7 +264,6 @@ void summation_protocol()
 
                 memset(line.info, 0, LINE_BUFFER);
                 while(buffer.amount_read != 0) {
-                    //whole_chunk_in_ascii();
                     if(line_read()) {
                         (*dbg)("LINE = %s\n", line.info);                
                         line_interpret();
