@@ -4,7 +4,6 @@ import time
 import requests
 import argparse
 from bs4 import BeautifulSoup
-import os
 
 url = "https://internetowykantor.pl/kurs-euro/"
 api = "https://klient.internetowykantor.pl/api/public/marketBrief"
@@ -21,31 +20,34 @@ def show_bar(show = True):
         time.sleep(10)
     # os.system('clear')
 
-iterations = 0
-exchange_amount = 3
+codes = [
+    'AUD', 'BGN', 'CAD', 'CHF', 'CZK', 
+    'DKK', 'EUR', 'GBP', 'HKD', 'HRK', 
+    'MXN', 'NOK', 'NZD', 'RON', 'RUB', 
+    'SEK', 'SGD', 'TRY', 'USD', 'ZAR'
+]
 
 if __name__ == "__main__":
-    os.system('clear')
-    
+    #parsing the main arguments    
     parser = argparse.ArgumentParser(description='Exchange currencies')
-    parser.add_argument('-exchange', dest='exchange', type=str, default='PLN', help="displays exchange rate to $code and from $code (default: PLN)")
-    parser.add_argument('-it', dest='iterations', type=int, default=1e3, help='amount of updates done')
-    parser.add_argument('-codes', nargs="+", default=["EUR", "USD"], help='codes which we want to exchange to $code (default: EUR, USD)')
+    parser.add_argument('-to', dest='c_to', type=str, default='PLN', help="displays exchange rate to $(code) and from $(code) (default: PLN)")
+    parser.add_argument('-i', '--iterations', dest='i', type=int, default=1000, help='amount of updates done')
+    parser.add_argument('-from', dest='c_from', nargs="+", default=codes, help='codes to exchange to $(code) (default: look --codes)')
+    parser.add_argument('-c', '--codes', action="store_true", help="display possible codes")
+    parser.add_argument('-b', '--bar', action="store_true", help="show progress bar (alive_progress library needed)")
     args = parser.parse_args()
 
-    print(args.exchange, args.iterations)
+    #print possible codes
+    if args.codes:
+        print("Possible codes (remember some of them could not have the conversion to other):")
+        for code in codes:
+            print(code, end=" ")    
+        print()
+        sys.exit()    
 
-    # if len(args) == 0:
-    #     print(
-    #         """Run with code of the currency e.g \033[32mEUR\033[0m
-    #             Can be run with: 
-    #             --help (displays available currency codes)
-    #             -exchange (displays exchange rate to $code and from $code, e.g -PLN will show exchange rate to PLN and from PLN)
-    #             -($number) (amount of updates done by the programme, e.g -3 )
-    #         """
-    #     )
-    
-    for i in range(iterations):
+    #main loop
+    for i in range(args.i):
+        converted = 0
         try:
             r = requests.get(api)
             r.raise_for_status()
@@ -53,27 +55,31 @@ if __name__ == "__main__":
             raise SystemExit(e)
         soup = BeautifulSoup(r.content, 'html.parser')
 
-        data = json.loads(soup.text)
+        data = json.loads(soup.text) #get the api json with exchanges
 
-        for j in range(len(data)):
-            conversion = data[j]['pair'].split('_')
-            if conversion[1] == 'PLN':
-                data_time = data[j]['ts'][:-1].split('T')
+        for j in range(len(data)): #get every json object
+            conversion = data[j]['pair'].split('_') #conversion e.g ['EUR', 'PLN'], from->to
+            if conversion[0] in args.c_from:
+                if conversion[1] == args.c_to:
+                    data_time = data[j]['ts'][:-1].split('T') #get time from api (GMT time)
 
-                offers = data[j]['directExchangeOffers']
-                forex_change = 100 * (
-                    (float(offers['forexNow']) - float(offers['forexOld']))
-                    / float(offers['forexOld'])
-                )
-                offers.pop('forexOld') 
-                offers.pop('buyOld') 
-                offers.pop('sellOld')
-                
-                print(f'{conversion[0]} to {conversion[1]} on [{data_time[0]} {data_time[1]}]: ', end='| ')
+                    offers = data[j]['directExchangeOffers']
+                    forex_change = 100 * (
+                        (float(offers['forexNow']) - float(offers['forexOld']))
+                        / float(offers['forexOld'])
+                    )
+                    offers.pop('forexOld') 
+                    offers.pop('buyOld') 
+                    offers.pop('sellOld')
+                    
+                    print(f'{conversion[0]} to {conversion[1]} on [{data_time[0]} {data_time[1]}]: ', end='| ')
 
-                for offer in offers.items():    
-                    print(f'{offer[0]} = {format(offer[1], ".4f")}', end = ' | ')
-                print(f'change = {format(forex_change, ".4f")}%')
-        
-        show_bar()
+                    for offer in offers.items():    
+                        print(f'{offer[0]} = {format(offer[1], ".4f")}', end = ' | ')
+                    print(f'change = {format(forex_change, ".4f")}%')
+                    converted += 1
+        if(converted == 0): #the arguments produced 0 queries 
+            print("NO MATCHES, TRY DIFFERENT ARGUMENTS")
+            sys.exit()
+        show_bar(args.bar) #show progress bar (alive_progress needed)
         print()

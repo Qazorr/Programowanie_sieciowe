@@ -3,8 +3,7 @@ import json
 with open('data.json', 'r') as f:
     data = json.load(f)
 
-
-for i in range(2):
+for i in range(len(data)):
     conversion = data[i]['pair'].split('_')
     data_time = data[i]['ts'][:-1].split('T')
     offers = data[i]['directExchangeOffers']
@@ -12,7 +11,7 @@ for i in range(2):
         (float(offers['forexNow']) - float(offers['forexOld']))
         / float(offers['forexOld'])
     )
-    
+        
     print(f'{conversion[0]} to {conversion[1]} at {data_time}:')
 
     for offer in offers.items():    
