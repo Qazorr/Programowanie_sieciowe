@@ -1,0 +1,590 @@
+[
+    {
+        "pair": "EUR_PLN",
+        "ts": "2022-05-06T06:31:29.629Z",
+        "directExchangeOffers": {
+            "forexOld": 4.6937,
+            "buyOld": 4.6787,
+            "sellOld": 4.7087,
+            "forexNow": 4.6938,
+            "buyNow": 4.6788,
+            "sellNow": 4.7088
+        }
+    },
+    {
+        "pair": "CHF_PLN",
+        "ts": "2022-05-06T06:31:29.629Z",
+        "directExchangeOffers": {
+            "forexOld": 4.5241,
+            "buyOld": 4.5141,
+            "sellOld": 4.5541,
+            "forexNow": 4.5227,
+            "buyNow": 4.5127,
+            "sellNow": 4.5527
+        }
+    },
+    {
+        "pair": "USD_PLN",
+        "ts": "2022-05-06T06:31:29.629Z",
+        "directExchangeOffers": {
+            "forexOld": 4.464,
+            "buyOld": 4.449,
+            "sellOld": 4.479,
+            "forexNow": 4.4639,
+            "buyNow": 4.4489,
+            "sellNow": 4.4789
+        }
+    },
+    {
+        "pair": "GBP_PLN",
+        "ts": "2022-05-06T06:31:29.629Z",
+        "directExchangeOffers": {
+            "forexOld": 5.5122,
+            "buyOld": 5.4922,
+            "sellOld": 5.5322,
+            "forexNow": 5.5116,
+            "buyNow": 5.4916,
+            "sellNow": 5.5316
+        }
+    },
+    {
+        "pair": "ZAR_PLN",
+        "ts": "2022-05-06T06:31:29.629Z",
+        "directExchangeOffers": {
+            "forexOld": 0.2781,
+            "buyOld": 0.2764,
+            "sellOld": 0.2798,
+            "forexNow": 0.278,
+            "buyNow": 0.2763,
+            "sellNow": 0.2797
+        }
+    },
+    {
+        "pair": "TRY_PLN",
+        "ts": "2022-05-06T06:31:29.629Z",
+        "directExchangeOffers": {
+            "forexOld": 0.3,
+            "buyOld": 0.292,
+            "sellOld": 0.308,
+            "forexNow": 0.2999,
+            "buyNow": 0.2919,
+            "sellNow": 0.3079
+        }
+    },
+    {
+        "pair": "SGD_PLN",
+        "ts": "2022-05-06T06:31:29.629Z",
+        "directExchangeOffers": {
+            "forexOld": 3.2184,
+            "buyOld": 3.2049,
+            "sellOld": 3.2319,
+            "forexNow": 3.2186,
+            "buyNow": 3.2051,
+            "sellNow": 3.2321
+        }
+    },
+    {
+        "pair": "SEK_PLN",
+        "ts": "2022-05-06T06:31:29.629Z",
+        "directExchangeOffers": {
+            "forexOld": 0.448,
+            "buyOld": 0.4455,
+            "sellOld": 0.4505,
+            "forexNow": 0.4479,
+            "buyNow": 0.4454,
+            "sellNow": 0.4504
+        }
+    },
+    {
+        "pair": "RUB_PLN",
+        "ts": "2022-05-06T06:31:29.629Z",
+        "directExchangeOffers": {
+            "forexOld": 0.0681,
+            "buyOld": 0.0671,
+            "sellOld": 0.0691,
+            "forexNow": 0.0681,
+            "buyNow": 0.0671,
+            "sellNow": 0.0691
+        }
+    },
+    {
+        "pair": "RON_PLN",
+        "ts": "2022-05-06T06:31:29.629Z",
+        "directExchangeOffers": {
+            "forexOld": 0.9485,
+            "buyOld": 0.9425,
+            "sellOld": 0.9545,
+            "forexNow": 0.9486,
+            "buyNow": 0.9426,
+            "sellNow": 0.9546
+        }
+    },
+    {
+        "pair": "NZD_PLN",
+        "ts": "2022-05-06T06:31:29.629Z",
+        "directExchangeOffers": {
+            "forexOld": 2.863,
+            "buyOld": 2.848,
+            "sellOld": 2.878,
+            "forexNow": 2.8624,
+            "buyNow": 2.8474,
+            "sellNow": 2.8774
+        }
+    },
+    {
+        "pair": "NOK_PLN",
+        "ts": "2022-05-06T06:31:29.629Z",
+        "directExchangeOffers": {
+            "forexOld": 0.4692,
+            "buyOld": 0.4662,
+            "sellOld": 0.4722,
+            "forexNow": 0.4692,
+            "buyNow": 0.4662,
+            "sellNow": 0.4722
+        }
+    },
+    {
+        "pair": "MXN_PLN",
+        "ts": "2022-05-06T06:31:29.629Z",
+        "directExchangeOffers": {
+            "forexOld": 0.2206,
+            "buyOld": 0.2193,
+            "sellOld": 0.2219,
+            "forexNow": 0.2205,
+            "buyNow": 0.2192,
+            "sellNow": 0.2218
+        }
+    },
+    {
+        "pair": "HRK_PLN",
+        "ts": "2022-05-06T06:31:29.629Z",
+        "directExchangeOffers": {
+            "forexOld": 0.6246,
+            "buyOld": 0.6146,
+            "sellOld": 0.6346,
+            "forexNow": 0.6226,
+            "buyNow": 0.6126,
+            "sellNow": 0.6326
+        }
+    },
+    {
+        "pair": "HKD_PLN",
+        "ts": "2022-05-06T06:31:29.629Z",
+        "directExchangeOffers": {
+            "forexOld": 0.5687,
+            "buyOld": 0.5666,
+            "sellOld": 0.5708,
+            "forexNow": 0.5687,
+            "buyNow": 0.5666,
+            "sellNow": 0.5708
+        }
+    },
+    {
+        "pair": "DKK_PLN",
+        "ts": "2022-05-06T06:31:29.629Z",
+        "directExchangeOffers": {
+            "forexOld": 0.6308,
+            "buyOld": 0.6278,
+            "sellOld": 0.6338,
+            "forexNow": 0.6309,
+            "buyNow": 0.6279,
+            "sellNow": 0.6339
+        }
+    },
+    {
+        "pair": "CZK_PLN",
+        "ts": "2022-05-06T06:31:29.629Z",
+        "directExchangeOffers": {
+            "forexOld": 0.1908,
+            "buyOld": 0.1898,
+            "sellOld": 0.1918,
+            "forexNow": 0.1908,
+            "buyNow": 0.1898,
+            "sellNow": 0.1918
+        }
+    },
+    {
+        "pair": "CAD_PLN",
+        "ts": "2022-05-06T06:31:29.629Z",
+        "directExchangeOffers": {
+            "forexOld": 3.4748,
+            "buyOld": 3.4598,
+            "sellOld": 3.4898,
+            "forexNow": 3.4744,
+            "buyNow": 3.4594,
+            "sellNow": 3.4894
+        }
+    },
+    {
+        "pair": "BGN_PLN",
+        "ts": "2022-05-06T06:31:29.629Z",
+        "directExchangeOffers": {
+            "forexOld": 2.4099,
+            "buyOld": 2.3974,
+            "sellOld": 2.4224,
+            "forexNow": 2.4098,
+            "buyNow": 2.3973,
+            "sellNow": 2.4223
+        }
+    },
+    {
+        "pair": "AUD_PLN",
+        "ts": "2022-05-06T06:31:29.629Z",
+        "directExchangeOffers": {
+            "forexOld": 3.1629,
+            "buyOld": 3.1479,
+            "sellOld": 3.1779,
+            "forexNow": 3.1623,
+            "buyNow": 3.1473,
+            "sellNow": 3.1773
+        }
+    },
+    {
+        "pair": "EUR_USD",
+        "ts": "2022-05-06T06:31:29.629Z",
+        "directExchangeOffers": {
+            "forexOld": 1.0514,
+            "buyOld": 1.0464,
+            "sellOld": 1.0564,
+            "forexNow": 1.0515,
+            "buyNow": 1.0465,
+            "sellNow": 1.0565
+        }
+    },
+    {
+        "pair": "EUR_CHF",
+        "ts": "2022-05-06T06:31:29.629Z",
+        "directExchangeOffers": {
+            "forexOld": 1.0377,
+            "buyOld": 1.0302,
+            "sellOld": 1.0402,
+            "forexNow": 1.0378,
+            "buyNow": 1.0303,
+            "sellNow": 1.0403
+        }
+    },
+    {
+        "pair": "EUR_GBP",
+        "ts": "2022-05-06T06:31:29.629Z",
+        "directExchangeOffers": {
+            "forexOld": 0.8516,
+            "buyOld": 0.8476,
+            "sellOld": 0.8556,
+            "forexNow": 0.8517,
+            "buyNow": 0.8477,
+            "sellNow": 0.8557
+        }
+    },
+    {
+        "pair": "GBP_CHF",
+        "ts": "2022-05-06T06:31:29.629Z",
+        "directExchangeOffers": {
+            "forexOld": 1.2184,
+            "buyOld": 1.2084,
+            "sellOld": 1.2219,
+            "forexNow": 1.2186,
+            "buyNow": 1.2086,
+            "sellNow": 1.2221
+        }
+    },
+    {
+        "pair": "GBP_USD",
+        "ts": "2022-05-06T06:31:29.629Z",
+        "directExchangeOffers": {
+            "forexOld": 1.2348,
+            "buyOld": 1.2278,
+            "sellOld": 1.2418,
+            "forexNow": 1.2347,
+            "buyNow": 1.2277,
+            "sellNow": 1.2417
+        }
+    },
+    {
+        "pair": "USD_CHF",
+        "ts": "2022-05-06T06:31:29.629Z",
+        "directExchangeOffers": {
+            "forexOld": 0.987,
+            "buyOld": 0.9795,
+            "sellOld": 0.9895,
+            "forexNow": 0.987,
+            "buyNow": 0.9795,
+            "sellNow": 0.9895
+        }
+    },
+    {
+        "pair": "EUR_BGN",
+        "ts": "2022-05-06T06:31:29.629Z",
+        "directExchangeOffers": {
+            "forexOld": 1.9556,
+            "buyOld": 1.9466,
+            "sellOld": 1.9646,
+            "forexNow": 1.9556,
+            "buyNow": 1.9466,
+            "sellNow": 1.9646
+        }
+    },
+    {
+        "pair": "EUR_CAD",
+        "ts": "2022-05-06T06:31:29.629Z",
+        "directExchangeOffers": {
+            "forexOld": 1.3508,
+            "buyOld": 1.3433,
+            "sellOld": 1.3583,
+            "forexNow": 1.351,
+            "buyNow": 1.3435,
+            "sellNow": 1.3585
+        }
+    },
+    {
+        "pair": "EUR_CZK",
+        "ts": "2022-05-06T06:31:29.629Z",
+        "directExchangeOffers": {
+            "forexOld": 24.5956,
+            "buyOld": 24.4756,
+            "sellOld": 24.7156,
+            "forexNow": 24.5956,
+            "buyNow": 24.4756,
+            "sellNow": 24.7156
+        }
+    },
+    {
+        "pair": "EUR_DKK",
+        "ts": "2022-05-06T06:31:29.629Z",
+        "directExchangeOffers": {
+            "forexOld": 7.4401,
+            "buyOld": 7.4001,
+            "sellOld": 7.4801,
+            "forexNow": 7.44,
+            "buyNow": 7.4,
+            "sellNow": 7.48
+        }
+    },
+    {
+        "pair": "EUR_HKD",
+        "ts": "2022-05-06T06:31:29.629Z",
+        "directExchangeOffers": {
+            "forexOld": 8.2534,
+            "buyOld": 8.2104,
+            "sellOld": 8.2964,
+            "forexNow": 8.2537,
+            "buyNow": 8.2107,
+            "sellNow": 8.2967
+        }
+    },
+    {
+        "pair": "EUR_HRK",
+        "ts": "2022-05-06T06:31:29.629Z",
+        "directExchangeOffers": {
+            "forexOld": 7.5411,
+            "buyOld": 7.5011,
+            "sellOld": 7.5811,
+            "forexNow": 7.5387,
+            "buyNow": 7.4987,
+            "sellNow": 7.5787
+        }
+    },
+    {
+        "pair": "EUR_NOK",
+        "ts": "2022-05-06T06:31:29.629Z",
+        "directExchangeOffers": {
+            "forexOld": 10.0049,
+            "buyOld": 9.9599,
+            "sellOld": 10.0499,
+            "forexNow": 10.0044,
+            "buyNow": 9.9594,
+            "sellNow": 10.0494
+        }
+    },
+    {
+        "pair": "EUR_RON",
+        "ts": "2022-05-06T06:31:29.629Z",
+        "directExchangeOffers": {
+            "forexOld": 4.9496,
+            "buyOld": 4.9246,
+            "sellOld": 4.9746,
+            "forexNow": 4.949,
+            "buyNow": 4.924,
+            "sellNow": 4.974
+        }
+    },
+    {
+        "pair": "EUR_RUB",
+        "ts": "2022-05-06T06:31:29.629Z",
+        "directExchangeOffers": {
+            "forexOld": 68.8871,
+            "buyOld": 68.3871,
+            "sellOld": 69.3871,
+            "forexNow": 68.8904,
+            "buyNow": 68.3904,
+            "sellNow": 69.3904
+        }
+    },
+    {
+        "pair": "EUR_SEK",
+        "ts": "2022-05-06T06:31:29.629Z",
+        "directExchangeOffers": {
+            "forexOld": 10.4781,
+            "buyOld": 10.4281,
+            "sellOld": 10.5281,
+            "forexNow": 10.4784,
+            "buyNow": 10.4284,
+            "sellNow": 10.5284
+        }
+    },
+    {
+        "pair": "EUR_SGD",
+        "ts": "2022-05-06T06:31:29.629Z",
+        "directExchangeOffers": {
+            "forexOld": 1.4583,
+            "buyOld": 1.4513,
+            "sellOld": 1.4653,
+            "forexNow": 1.4583,
+            "buyNow": 1.4513,
+            "sellNow": 1.4653
+        }
+    },
+    {
+        "pair": "GBP_DKK",
+        "ts": "2022-05-06T06:31:29.629Z",
+        "directExchangeOffers": {
+            "forexOld": 8.7378,
+            "buyOld": 8.6978,
+            "sellOld": 8.7778,
+            "forexNow": 8.7362,
+            "buyNow": 8.6962,
+            "sellNow": 8.7762
+        }
+    },
+    {
+        "pair": "GBP_NOK",
+        "ts": "2022-05-06T06:31:29.629Z",
+        "directExchangeOffers": {
+            "forexOld": 11.75,
+            "buyOld": 11.69,
+            "sellOld": 11.81,
+            "forexNow": 11.7485,
+            "buyNow": 11.6885,
+            "sellNow": 11.8085
+        }
+    },
+    {
+        "pair": "GBP_RUB",
+        "ts": "2022-05-06T06:31:29.629Z",
+        "directExchangeOffers": {
+            "forexOld": 80.949683,
+            "buyOld": 80.829683,
+            "sellOld": 81.069683,
+            "forexNow": 80.956812,
+            "buyNow": 80.836812,
+            "sellNow": 81.076812
+        }
+    },
+    {
+        "pair": "GBP_SEK",
+        "ts": "2022-05-06T06:31:29.629Z",
+        "directExchangeOffers": {
+            "forexOld": 12.3064,
+            "buyOld": 12.2584,
+            "sellOld": 12.3544,
+            "forexNow": 12.3045,
+            "buyNow": 12.2565,
+            "sellNow": 12.3525
+        }
+    },
+    {
+        "pair": "NOK_DKK",
+        "ts": "2022-05-06T06:31:29.629Z",
+        "directExchangeOffers": {
+            "forexOld": 0.7436,
+            "buyOld": 0.7376,
+            "sellOld": 0.7496,
+            "forexNow": 0.7437,
+            "buyNow": 0.7377,
+            "sellNow": 0.7497
+        }
+    },
+    {
+        "pair": "SEK_DKK",
+        "ts": "2022-05-06T06:31:29.629Z",
+        "directExchangeOffers": {
+            "forexOld": 0.71,
+            "buyOld": 0.705,
+            "sellOld": 0.715,
+            "forexNow": 0.7101,
+            "buyNow": 0.7051,
+            "sellNow": 0.7151
+        }
+    },
+    {
+        "pair": "SEK_NOK",
+        "ts": "2022-05-06T06:31:29.629Z",
+        "directExchangeOffers": {
+            "forexOld": 0.9548,
+            "buyOld": 0.9498,
+            "sellOld": 0.9598,
+            "forexNow": 0.9548,
+            "buyNow": 0.9498,
+            "sellNow": 0.9598
+        }
+    },
+    {
+        "pair": "USD_DKK",
+        "ts": "2022-05-06T06:31:29.629Z",
+        "directExchangeOffers": {
+            "forexOld": 7.0761,
+            "buyOld": 7.0461,
+            "sellOld": 7.1061,
+            "forexNow": 7.0759,
+            "buyNow": 7.0459,
+            "sellNow": 7.1059
+        }
+    },
+    {
+        "pair": "USD_NOK",
+        "ts": "2022-05-06T06:31:29.629Z",
+        "directExchangeOffers": {
+            "forexOld": 9.5155,
+            "buyOld": 9.4855,
+            "sellOld": 9.5455,
+            "forexNow": 9.5149,
+            "buyNow": 9.4849,
+            "sellNow": 9.5449
+        }
+    },
+    {
+        "pair": "USD_RUB",
+        "ts": "2022-05-06T06:31:29.629Z",
+        "directExchangeOffers": {
+            "forexOld": 65.5243,
+            "buyOld": 65.4343,
+            "sellOld": 65.6143,
+            "forexNow": 65.5243,
+            "buyNow": 65.4343,
+            "sellNow": 65.6143
+        }
+    },
+    {
+        "pair": "USD_SEK",
+        "ts": "2022-05-06T06:31:29.629Z",
+        "directExchangeOffers": {
+            "forexOld": 9.9656,
+            "buyOld": 9.9296,
+            "sellOld": 10.0016,
+            "forexNow": 9.966,
+            "buyNow": 9.93,
+            "sellNow": 10.002
+        }
+    },
+    {
+        "pair": "EUR_HUF",
+        "ts": "2022-05-06T06:31:29.629Z",
+        "directExchangeOffers": {
+            "forexOld": 380.4147,
+            "buyOld": 378.7147,
+            "sellOld": 382.1147,
+            "forexNow": 380.3817,
+            "buyNow": 378.6817,
+            "sellNow": 382.0817
+        }
+    }
+]
