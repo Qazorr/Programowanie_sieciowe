@@ -5,7 +5,7 @@ POST_sphinx:
 
 curl_retrieve:
 	@echo "Logging to server"
-	curl -d "login=test&password=0123" -X POST http://sphinx.if.uj.edu.pl/techwww/httptest/login -c cookies.txt
+	curl -d -v "login=test&password=0123" -X POST http://sphinx.if.uj.edu.pl/techwww/httptest/login -c cookies.txt
 	@echo 
 	@echo "Getting /private data"
-	curl -X GET http://sphinx.if.uj.edu.pl/techwww/httptest/private -b cookies.txt
+	curl http://sphinx.if.uj.edu.pl/techwww/httptest/private -b cookies.txt
