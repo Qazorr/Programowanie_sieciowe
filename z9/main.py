@@ -22,6 +22,7 @@ def show_bar(show = True):
 
 codes = [
     'AUD', 'BGN', 'CAD', 'CHF', 'CZK', 
+
     'DKK', 'EUR', 'GBP', 'HKD', 'HRK', 
     'MXN', 'NOK', 'NZD', 'RON', 'RUB', 
     'SEK', 'SGD', 'TRY', 'USD', 'ZAR'
@@ -44,6 +45,11 @@ if __name__ == "__main__":
             print(code, end=" ")    
         print()
         sys.exit()    
+
+    #print bad -from arguments
+    for code in args.c_from:
+        if code not in codes:
+            print(f"Bad argument -from: {code}")
 
     #main loop
     for i in range(args.i):
