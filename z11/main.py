@@ -14,6 +14,7 @@ headers = {
 
 request_limit = 60
 time_to_wait = 5
+timeout = 5
 
 # colors
 class c:
@@ -28,7 +29,7 @@ class c:
 
 def safe_get(url, try_no=1, tries=3):
     try:
-        r = requests.get(url, headers=headers)
+        r = requests.get(url, headers=headers, timeout=timeout)
         r.raise_for_status()
         global request_limit
         request_limit = r.headers['X-Discogs-Ratelimit-Remaining']
@@ -46,6 +47,12 @@ def safe_get(url, try_no=1, tries=3):
                 sys.exit(0)
         else:
             raise SystemExit(e)
+    except requests.ConnectionError as e:
+        print("Please check your internet connection.")
+        sys.exit(0)
+    except Exception as e:
+        print(f"Something went wrong... error={e}")
+        sys.exit(0)
 
 def find_id_from_name(name):
     r = safe_get(search_url+'?q='+name+'&type=artist')
