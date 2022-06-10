@@ -55,10 +55,12 @@ if __name__ == "__main__":
     for i in range(args.i):
         converted = 0
         try:
-            r = requests.get(api)
+            r = requests.get(api, timeout=10)
             r.raise_for_status()
         except requests.exceptions.HTTPError as e:
             raise SystemExit(e)
+        except Exception as e:
+            print(e)
         soup = BeautifulSoup(r.content, 'html.parser')
 
         data = json.loads(soup.text) #get the api json with exchanges
