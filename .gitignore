@@ -33,3 +33,6 @@
 */*.out
 */*.app
 */*.x
+
+# Other
+pdfs/
