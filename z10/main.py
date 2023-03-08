@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 url = 'https://www.discogs.com/artist/359282-Budka-Suflera'
 headers = {
     'User-Agent': 'LearningDiscogs',
-    'Authorization': 'Discogs token=QjZGUstyCPDdDOmiDaKQxgUMjBxauvtcrjYoLYZb'
+    'Authorization': 'Discogs token='
 }
 
 budka_suflera = {
